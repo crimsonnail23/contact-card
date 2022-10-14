@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Import CSS files
 import "../css/index.css";
-
+//stuff
 // Import images
 import Logo from '../images/logo.png';
 import Bear from '../images/bear.png';
