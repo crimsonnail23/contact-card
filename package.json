@@ -9,7 +9,9 @@
     "start": "cd server && node server.js",
     "server": " cd server nodemon server.js --ignore client",
     "build": "cd client && npm run build",
-    "client": "cd client && npm start"
+    "install": "concurrently \"cd client && npm install\" \"cd server && npm install\"",
+    "client": "cd client && npm start",
+    "heroku-prebuild": "npm install --dev"
 
   },
   "repository": {
@@ -25,5 +27,9 @@
   "homepage": "https://github.com/crimsonnail23/contact-card#readme",
   "dependencies": {
     "concurrently": "^7.4.0"
+  },
+  "engines":{
+    "node": "16.6.0"
   }
+  
 }
