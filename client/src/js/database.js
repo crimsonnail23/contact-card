@@ -1,33 +1,64 @@
 import { openDB } from 'idb';
 import 'regenerator-runtime/runtime';
 
-export const initdb = async()=>{
-    openDB('contact_db', 1,{
-        // add our database schema if it has not already been added.
-        upgrade(db){
-            if(db.objectStoreNames){
-                console.log('contact stores already exist.');
-                return;
-            }
-            db.createObjectStore('contacts', {keypath: id, autoIncrement: true});
-            console.log('contact stores created');
-        }
-    })
-}
+export const initdb = async () =>
+// We are creating a new database named 'contact_db' which will be using version 1 of the database.
+  openDB('contact_db', 1, {
+    // Add our database schema if it has not already been initialized.
+    upgrade(db) {
+      if (db.objectStoreNames.contains('contacts')) {
+        console.log('contacts store already exists');
+        return;
+      }
+      // Create a new object store for the data and give it an key name of 'id' which needs to increment automatically.
+      db.createObjectStore('contacts', { keyPath: 'id', autoIncrement: true });
+      console.log('contacts store created');
+    }
+  });
 
-//export a function we will use to GET to the database.
-export const getDb = async ()=>{
-    //create a connected to the database and the version we want.
-    const contactDb = await openDB('contact_db',1);
+// Exported READ function
 
-    //create a new transaction and specify the store and data priviledges.
-    const tx=contactDb.transaction('contacts', 'readonly');
+// Export a function we will use to GET to the database.
+export const getDb = async () => {
+  console.log('GET from the database');
 
-    //open up desired object store.
-    const store = tx.objectStore('contacts')
+  // Create a connection to the database database and version we want to use.
+  const contactDb = await openDB('contact_db', 1);
 
-    //use the getAll(); method to get all data in database.
-    const request = await store.getAll();
+  // Create a new transaction and specify the store and data privileges.
+  const tx = contactDb.transaction('contacts', 'readonly');
 
-    //get confimation
-}
+  // Open up the desired object store.
+  const store = tx.objectStore('contacts');
+
+  // Use the .getAll() method to get all data in the database.
+  const request = store.getAll();
+
+  // Get confirmation of the request.
+  const result = await request;
+  console.log('result.value', result);
+  return result;
+};
+
+// EXPORTED CREATE function
+
+// Export a function we will use to POST to the database.
+export const postDb = async (name, email, phone, profile)  => {
+  console.log('Post to the database');
+
+  // Create a connection to the database database and version we want to use.
+  const contactDb = await openDB('contact_db', 1);
+
+  // Create a new transaction and specify the store and data privileges.
+  const tx = contactDb.transaction('contacts', 'readwrite');
+
+  // Open up the desired object store.
+  const store = tx.objectStore('contacts');
+
+  // Use the .add() method on the store and pass in the content.
+  const request = store.add({ name: name, email: email, phone: phone, profile: profile});
+
+  // Get confirmation of the request.
+  const result = await request;
+  console.log('🚀 - data saved to the database', result);
+};
