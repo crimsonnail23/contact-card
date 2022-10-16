@@ -3,7 +3,7 @@ import { toggleForm, clearForm} from "./form";
 
 import { Tooltip, Toast, Popover } from 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import{ initdb, getDb, postDb } from './database';
+import{ initdb, getDb, postDb, deleteDb } from './database';
 import{ fetchCards} from './cards'
 
 // Import CSS files
@@ -60,3 +60,12 @@ window.addEventListener('load', function () {
   // Reload the DOM
   fetchCards();
   });
+
+  window.deleteCard = (e)=>{
+    //grabs the ID from the button element to the contact card.
+    let id= parseInt(e.id);
+    //delete the card.
+    deleteDb(id);
+    //reload the DOM
+    fetchCards();
+  };
