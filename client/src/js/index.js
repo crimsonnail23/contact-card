@@ -14,7 +14,22 @@ import Logo from '../images/logo.png';
 import Bear from '../images/bear.png';
 import Dog from '../images/dog.png';
 
+const installBtn = document.getElementById('installBtn');
 
+window.addEventListener('beforeinstallprompt', (event)=>{
+  event.preventDefault();
+  installBtn.style.visibility='visible';
+
+  installBtn.addEventListener('click',()=>{
+    event.prompt();
+    installBtn.setAttribute('disabled', true);
+    installBtn.textContent= "installed!";
+  });
+
+  window.addEventListener('appinstalled', (event)=>{
+    console.log('👍', 'appinstalled', event);
+  })
+})
 
 
 // Add images on load
@@ -97,10 +112,11 @@ window.addEventListener('load', function () {
       submitBtnToUpdate = true;
   };
 
-  if ('serviceWorker' in navigator ){
-    // use the window load event to keep the page load performant.
-    window.addEventListener('load', ()=>{
-      navigator.serviceWorker.register('./service-worker.js');
-    })
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./service-worker.js').then(function(reg) {
+        console.log('Successfully registered service worker', reg);
+    }).catch(function(err) {
+        console.warn('Error whilst registering service worker', err);
+    });
   }
   
